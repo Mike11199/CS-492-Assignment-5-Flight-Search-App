@@ -13,6 +13,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.getValue
@@ -30,6 +34,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import com.example.flightsearch.data.Airport
 
 @Composable
@@ -57,10 +63,17 @@ fun FlightSearchInputBox() {
         TextField(
             value = text,
             onValueChange = { text = it },
-            label = { Text("Search flights...") },
+            label = { Text("Enter departure airport") },
             modifier = Modifier
                 .padding(start = 25.dp, end = 25.dp, top = 2.dp, bottom = 2.dp)
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(50),
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Search Icon"
+                )
+            },
         )
     }
 }
@@ -79,7 +92,7 @@ private fun FlightSearchAppContent(
             FlightItemCard(
                 airport = airport,
             )
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(5.dp))
         }
     }
 }
@@ -93,37 +106,41 @@ fun FlightItemCard(
 ) {
     Card(
         {  }, modifier
-            .padding(start = 15.dp, end = 15.dp),
-        shape= RectangleShape,
+            .padding(start = 20.dp, end = 20.dp),
+        shape = RoundedCornerShape(10),
         colors = CardDefaults.cardColors(
             containerColor = Color(145,153,255, 250),
         )) {
         Row(
-            Modifier
-                .padding(start = 1.dp, end = 1.dp, top = 5.dp, bottom = 5.dp)
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+            .padding(start = 15.dp, end = 15.dp, top = 5.dp, bottom = 5.dp)
                 .fillMaxWidth()
+                .height(30.dp)
         ){
             Row(
                 Modifier
             ) {
                 Row(
+                    verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        .padding(start=5.dp, end=15.dp),
+                        .padding(end=15.dp),
                 ) {
                     Text(
                         text = airport.iata_code,
+                        textAlign = TextAlign.Center,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                     )
                 }
                 Row(
                     modifier = Modifier
-
                 ) {
                     Text(
                         text = airport.name,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 14.sp,
+                        overflow = TextOverflow.Ellipsis,
                     )
                 }
             }
