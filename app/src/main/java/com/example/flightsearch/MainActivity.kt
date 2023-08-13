@@ -10,6 +10,16 @@ import androidx.compose.ui.graphics.Color
 import com.example.flightsearch.ui.FlightSearchApp
 import com.example.flightsearch.ui.theme.MyApplicationTheme
 
+/**************************************************************************************************
+ * OSU - Oregon State University
+ *      CS 492 - Mobile Development
+ *
+ * Assignment #5:   Data Persistence
+ * Name:            Michael Iwanek
+ * Date:            8/12/2023
+ *
+ *************************************************************************************************/
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
