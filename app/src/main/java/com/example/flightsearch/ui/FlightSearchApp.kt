@@ -17,7 +17,10 @@ fun FlightSearchApp(
     Box() {
         FlightSearchHomeScreen(
             flightSearchUIState = flightSearchUIState,
-            airports = allAirports
+            airports = allAirports,
+            onClickToNavigateToHomePage = {
+                viewModel.navigateToHomePage()
+            },
         )
     }
 }

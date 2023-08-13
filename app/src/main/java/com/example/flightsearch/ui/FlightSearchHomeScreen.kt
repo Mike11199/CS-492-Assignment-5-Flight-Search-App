@@ -1,6 +1,7 @@
 package com.example.flightsearch.ui
 
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,10 +11,12 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
@@ -27,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.getValue
@@ -37,17 +41,20 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import com.example.flightsearch.data.Airport
+import com.example.flightsearch.data.ScreenType
 
 @Composable
 fun FlightSearchHomeScreen(
     flightSearchUIState: FlightSearchUIState,
     modifier: Modifier = Modifier,
     airports: List<Airport>,
+    onClickToNavigateToHomePage: () -> Unit,
     ) {
     Box(){
         FlightSearchAppContent(
             flightSearchUIState = flightSearchUIState,
-            airports = airports
+            airports = airports,
+            onClickToNavigateToHomePage = onClickToNavigateToHomePage
         )
     }
 }
@@ -57,7 +64,7 @@ fun FlightSearchInputBox() {
     var text by remember { mutableStateOf("") }
     Row(
         Modifier
-            .padding(start = 1.dp, end = 1.dp, top = 25.dp, bottom = 25.dp)
+            .padding(start = 1.dp, end = 1.dp, top = 75.dp, bottom = 55.dp)
             .fillMaxWidth()
     ){
         TextField(
@@ -82,11 +89,15 @@ fun FlightSearchInputBox() {
 private fun FlightSearchAppContent(
     flightSearchUIState: FlightSearchUIState,
     airports: List<Airport>,
+    onClickToNavigateToHomePage: () -> Unit,
 ){
+    FlightSearchTopAppBar(
+        flightSearchUIState = flightSearchUIState,
+        onClickToNavigateToHomePage = onClickToNavigateToHomePage
+    )
     FlightSearchInputBox()
-
     LazyColumn (
-        Modifier.padding(top = 120.dp)
+        Modifier.padding(top = 160.dp)
     ) {
         itemsIndexed(airports) { index, airport ->
             FlightItemCard(
@@ -147,4 +158,60 @@ fun FlightItemCard(
         }
     }
 }
+
+
+@Composable
+private fun FlightSearchTopAppBar(
+    flightSearchUIState: FlightSearchUIState,
+    modifier: Modifier = Modifier,
+    onClickToNavigateToHomePage: () -> Unit,
+) {
+
+    val currentPage = flightSearchUIState.currentScreen
+
+    Box(
+        modifier = Modifier
+            .background(Color.Black)
+            .height(55.dp)
+            .fillMaxWidth()
+    ){
+        if (currentPage != ScreenType.Home) {
+            IconButton(
+                onClick = {
+                        onClickToNavigateToHomePage()
+                },
+                modifier = Modifier.align(Alignment.TopStart)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "back",
+                    tint = Color.White,
+                    modifier = Modifier
+                        .padding(top = 9.dp),
+                )
+            }
+        }
+        Column(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(top = 12.dp),
+        ) {
+            Text(
+                text = "Flight Search App",
+                color = Color.White,
+                textAlign = TextAlign.Center
+            )
+            Row(){
+                Spacer(modifier = Modifier.width(12.dp))
+                Text(
+                    text = "OSU CS 492 - © Michael Iwanek",
+                    color = Color.White,
+                    textAlign = TextAlign.Center,
+                    fontSize = 9.sp
+                )
+            }
+        }
+    }
+}
+
 
