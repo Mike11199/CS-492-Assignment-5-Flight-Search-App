@@ -138,16 +138,22 @@ private fun FlightSearchAppContent(
     if (flightSearchUIState.currentScreen == ScreenType.Home) {
 
         LazyColumn(
-            Modifier.padding(top = 160.dp)
+            Modifier.padding(top = 160.dp),
+            verticalArrangement = Arrangement.spacedBy(.1.dp) // Adjust the spacing here
+
         ) {
             itemsIndexed(airports) { index, airport ->
                 FlightItemCard(
                     airport = airport,
                     onAutoCompleteClick = onAutoCompleteClick,
                 )
-                Spacer(modifier = Modifier.height(5.dp))
+//                Spacer(modifier = Modifier.height(1.dp))
             }
         }
+    }
+    else if (flightSearchUIState.currentScreen == ScreenType.Home) {
+
+
     }
 }
 
@@ -165,8 +171,11 @@ fun FlightItemCard(
             .padding(start = 20.dp, end = 20.dp),
         shape = RoundedCornerShape(10),
         colors = CardDefaults.cardColors(
-            containerColor = Color(145,153,255, 250),
-        )) {
+//            containerColor = Color(145,153,255, 250),
+            containerColor = Color.DarkGray
+        )
+        )
+        {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
@@ -187,6 +196,7 @@ fun FlightItemCard(
                         textAlign = TextAlign.Center,
                         fontWeight = FontWeight.Bold,
                         fontSize = 14.sp,
+                        color = Color.White
                     )
                 }
                 Row(
@@ -197,6 +207,7 @@ fun FlightItemCard(
                         fontWeight = FontWeight.Normal,
                         fontSize = 14.sp,
                         overflow = TextOverflow.Ellipsis,
+                        color = Color.White
                     )
                 }
             }
@@ -242,7 +253,7 @@ private fun FlightSearchTopAppBar(
                 .padding(top = 12.dp),
         ) {
             Text(
-                text = "Flight Search App",
+                text = "Flight Sear️ch App ✈️",
                 color = Color.White,
                 textAlign = TextAlign.Center
             )
