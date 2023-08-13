@@ -13,9 +13,9 @@ fun FlightSearchApp(
     val viewModel: FlightSearchViewModel = viewModel()
     val flightSearchUIState = viewModel.uiState.collectAsState().value
     Box() {
-    FlightSearchHomeScreen(
-        flightSearchUIState = flightSearchUIState
-    )
+        FlightSearchHomeScreen(
+            flightSearchUIState = flightSearchUIState
+        )
     }
 }
 
