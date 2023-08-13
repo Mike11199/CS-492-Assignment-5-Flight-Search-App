@@ -59,6 +59,14 @@ class FlightSearchViewModel (private val airportDao: AirportDao, private val fav
         }
     }
 
+    fun navigateToAirportDetail() {
+        _uiState.update {
+            it.copy(
+                currentScreen = ScreenType.AirportDetail
+            )
+        }
+    }
+
     companion object {
         val factory : ViewModelProvider.Factory = viewModelFactory {
             initializer {

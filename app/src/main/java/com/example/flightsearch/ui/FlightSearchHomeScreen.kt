@@ -60,13 +60,15 @@ fun FlightSearchHomeScreen(
     airports: List<Airport>,
     onClickToNavigateToHomePage: () -> Unit,
     updateUIForSearchText: (searchString: String) -> Unit,
+    onAutoCompleteClick:() -> Unit,
     ) {
     Box(){
         FlightSearchAppContent(
             flightSearchUIState = flightSearchUIState,
             airports = airports,
             onClickToNavigateToHomePage = onClickToNavigateToHomePage,
-            updateUIForSearchText = updateUIForSearchText
+            updateUIForSearchText = updateUIForSearchText,
+            onAutoCompleteClick = onAutoCompleteClick
         )
     }
 }
@@ -77,6 +79,7 @@ fun FlightSearchHomeScreen(
 fun FlightSearchInputBox(
     flightSearchUIState: FlightSearchUIState,
     updateUIForSearchText: (searchString: String) -> Unit,
+    onClickToNavigateToHomePage: () -> Unit,
 ) {
     var text by remember { mutableStateOf("") }
     Row(
@@ -93,6 +96,7 @@ fun FlightSearchInputBox(
             keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done,
             keyboardType = KeyboardType.Password),
             onValueChange = {
+                onClickToNavigateToHomePage()
                 //get rid of new lines!!!
                 text = it.replace("\n", "")
                 updateUIForSearchText(it.replace("\n", ""))},
@@ -120,6 +124,7 @@ private fun FlightSearchAppContent(
     airports: List<Airport>,
     onClickToNavigateToHomePage: () -> Unit,
     updateUIForSearchText: (searchString: String) -> Unit,
+    onAutoCompleteClick:() -> Unit,
 ){
     FlightSearchTopAppBar(
         flightSearchUIState = flightSearchUIState,
@@ -127,16 +132,21 @@ private fun FlightSearchAppContent(
     )
     FlightSearchInputBox(
         flightSearchUIState = flightSearchUIState,
-        updateUIForSearchText = updateUIForSearchText
+        updateUIForSearchText = updateUIForSearchText,
+        onClickToNavigateToHomePage = onClickToNavigateToHomePage,
     )
-    LazyColumn (
-        Modifier.padding(top = 160.dp)
-    ) {
-        itemsIndexed(airports) { index, airport ->
-            FlightItemCard(
-                airport = airport,
-            )
-            Spacer(modifier = Modifier.height(5.dp))
+    if (flightSearchUIState.currentScreen == ScreenType.Home) {
+
+        LazyColumn(
+            Modifier.padding(top = 160.dp)
+        ) {
+            itemsIndexed(airports) { index, airport ->
+                FlightItemCard(
+                    airport = airport,
+                    onAutoCompleteClick = onAutoCompleteClick,
+                )
+                Spacer(modifier = Modifier.height(5.dp))
+            }
         }
     }
 }
@@ -147,9 +157,11 @@ private fun FlightSearchAppContent(
 fun FlightItemCard(
     airport: Airport,
     modifier: Modifier = Modifier,
+    onAutoCompleteClick:() -> Unit,
 ) {
     Card(
-        {  }, modifier
+        onClick = onAutoCompleteClick,
+        modifier
             .padding(start = 20.dp, end = 20.dp),
         shape = RoundedCornerShape(10),
         colors = CardDefaults.cardColors(

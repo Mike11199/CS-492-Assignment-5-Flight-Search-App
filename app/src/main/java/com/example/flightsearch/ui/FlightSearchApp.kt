@@ -25,6 +25,9 @@ fun FlightSearchApp(
             updateUIForSearchText = {searchString: String ->
                 viewModel.updateUiStateForSearchedAirport(searchString)
             },
+            onAutoCompleteClick = {
+                viewModel.navigateToAirportDetail()
+            },
         )
     }
 }
