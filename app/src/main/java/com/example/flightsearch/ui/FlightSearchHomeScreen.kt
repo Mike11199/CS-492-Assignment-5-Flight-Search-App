@@ -23,6 +23,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.RectangleShape
 import com.example.flightsearch.data.Airport
 
@@ -40,21 +46,34 @@ fun FlightSearchHomeScreen(
     }
 }
 
+@Composable
+fun FlightSearchInputBox() {
+    var text by remember { mutableStateOf("") }
+    Row(
+        Modifier
+            .padding(start = 1.dp, end = 1.dp, top = 25.dp, bottom = 25.dp)
+            .fillMaxWidth()
+    ){
+        TextField(
+            value = text,
+            onValueChange = { text = it },
+            label = { Text("Search flights...") },
+            modifier = Modifier
+                .padding(start = 25.dp, end = 25.dp, top = 2.dp, bottom = 2.dp)
+                .fillMaxWidth()
+        )
+    }
+}
 
 @Composable
 private fun FlightSearchAppContent(
     flightSearchUIState: FlightSearchUIState,
     airports: List<Airport>,
 ){
-//    val airports = listOf(
-//        Airport(1, "SMF", "Sacramento", 2343),
-//        Airport(2, "LAX", "Los Angeles", 4567),
-//        Airport(3, "JFK", "New York", 7890),
-//        Airport(4, "ORD", "Chicago", 5678)
-//    )
+    FlightSearchInputBox()
 
     LazyColumn (
-        Modifier.padding(top = 80.dp)
+        Modifier.padding(top = 120.dp)
     ) {
         itemsIndexed(airports) { index, airport ->
             FlightItemCard(
@@ -81,7 +100,7 @@ fun FlightItemCard(
         )) {
         Row(
             Modifier
-                .padding(start = 1.dp, end=1.dp, top=5.dp, bottom=5.dp)
+                .padding(start = 1.dp, end = 1.dp, top = 5.dp, bottom = 5.dp)
                 .fillMaxWidth()
         ){
             Row(
