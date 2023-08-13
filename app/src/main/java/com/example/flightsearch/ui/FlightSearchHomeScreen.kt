@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Email
@@ -37,7 +39,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import com.example.flightsearch.data.Airport
@@ -61,6 +71,8 @@ fun FlightSearchHomeScreen(
     }
 }
 
+
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun FlightSearchInputBox(
     flightSearchUIState: FlightSearchUIState,
@@ -72,17 +84,25 @@ fun FlightSearchInputBox(
             .padding(start = 1.dp, end = 1.dp, top = 75.dp, bottom = 55.dp)
             .fillMaxWidth()
     ){
+        val focusManager = LocalFocusManager.current
         TextField(
+            maxLines = 1,
             value = text,
+            //keyboard actions to hide keyboard when clicking enter
+            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done,
+            keyboardType = KeyboardType.Password),
             onValueChange = {
-                text = it
-                updateUIForSearchText(it)},
+                //get rid of new lines!!!
+                text = it.replace("\n", "")
+                updateUIForSearchText(it.replace("\n", ""))},
 //            value = text,
 //            onValueChange = { text = it },
             label = { Text("Enter departure airport") },
             modifier = Modifier
                 .padding(start = 25.dp, end = 25.dp, top = 2.dp, bottom = 2.dp)
                 .fillMaxWidth(),
+
             shape = RoundedCornerShape(50),
             leadingIcon = {
                 Icon(
