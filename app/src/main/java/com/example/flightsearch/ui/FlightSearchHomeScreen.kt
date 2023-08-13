@@ -234,7 +234,7 @@ fun FlightItemCard(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-            .padding(start = 15.dp, end = 15.dp, top = 5.dp, bottom = 5.dp)
+                .padding(start = 15.dp, end = 15.dp, top = 5.dp, bottom = 5.dp)
                 .fillMaxWidth()
                 .height(30.dp)
         ){
@@ -354,34 +354,101 @@ fun DestinationCard(
             modifier = Modifier
                 .padding(start = 15.dp, end = 15.dp, top = 5.dp, bottom = 5.dp)
                 .fillMaxWidth()
-                .height(150.dp)
+                .height(100.dp)
         ){
-            Row(
-                Modifier
-            ) {
+            Column() {
                 Row(
-                    verticalAlignment = Alignment.CenterVertically,
+                    Modifier
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .padding(end=15.dp),
+                        ) {
+                            Text(
+                                text = "DEPART",
+                                textAlign = TextAlign.Center,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 14.sp,
+                                color = Color.DarkGray
+                            )
+                        }
+                    }
+                Row(
                     modifier = Modifier
-                        .padding(end=15.dp),
+                        .padding(bottom = 15.dp),
                 ) {
-                    Text(
-                        text = airport.iata_code,
-                        textAlign = TextAlign.Center,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 14.sp,
-                        color = Color.White
-                    )
+//                    Spacer(modifier = Modifier.width(15.dp))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .padding(end=15.dp),
+                    ) {
+                        Text(
+                            text = airport.iata_code,
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 14.sp,
+                            //                        color = Color.White
+                        )
+                    }
+                    Row(
+                        modifier = Modifier
+                    ) {
+                        Text(
+                            text = airport.name,
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 14.sp,
+                            overflow = TextOverflow.Ellipsis,
+                            //                        color = Color.White
+                        )
+                    }
                 }
                 Row(
-                    modifier = Modifier
+                    Modifier
                 ) {
-                    Text(
-                        text = airport.name,
-                        fontWeight = FontWeight.Normal,
-                        fontSize = 14.sp,
-                        overflow = TextOverflow.Ellipsis,
-                        color = Color.White
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .padding(end=15.dp),
+                    ) {
+                        Text(
+                            text = "ARRIVE",
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 14.sp,
+                            color = Color.DarkGray
+                        )
+                    }
+                }
+                Row(
+                    Modifier
+                ) {
+//                    Spacer(modifier = Modifier.width(15.dp))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .padding(end=15.dp),
+                    ) {
+                        Text(
+                            text = airport.iata_code,
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 14.sp,
+                            //                        color = Color.White
+                        )
+                    }
+                    Row(
+                        modifier = Modifier
+                    ) {
+                        Text(
+                            text = airport.name,
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 14.sp,
+                            overflow = TextOverflow.Ellipsis,
+                            //                        color = Color.White
+                        )
+                    }
                 }
             }
         }
