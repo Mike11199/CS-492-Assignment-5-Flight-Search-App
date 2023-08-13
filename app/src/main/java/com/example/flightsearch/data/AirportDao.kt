@@ -24,4 +24,11 @@ interface AirportDao {
     )
     fun searchAirport(searchText: String): Flow<List<Airport>>
 
+    @Query(
+        """
+        SELECT * FROM airport 
+        WHERE airport.id != :destinationId
+        """
+    )
+    fun searchDestination(destinationId: Int): Flow<List<Airport>>
 }

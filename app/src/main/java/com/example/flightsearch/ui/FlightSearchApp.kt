@@ -15,16 +15,21 @@ fun FlightSearchApp(
     val flightSearchUIState = viewModel.uiState.collectAsState().value
     val allAirports by viewModel.getAllAirports().collectAsState(emptyList())
     val searchedAirports by viewModel.searchAirports(flightSearchUIState.searchString).collectAsState(emptyList())
+    val destinationAirports by viewModel.searchDestinations(flightSearchUIState.selectedAirport).collectAsState(emptyList())
 
     Box() {
         FlightSearchHomeScreen(
             flightSearchUIState = flightSearchUIState,
             airports = searchedAirports,
+            destinationAirports = destinationAirports,
             onClickNavigateToScreen = { screenType: ScreenType ->
                 viewModel.navigateToScreen(screenType)
             },
             updateUIForSearchText = {searchString: String ->
                 viewModel.updateUiStateForSearchedAirport(searchString)
+            },
+            updateUiStateForSelectedAirport = {selectedAirport: Int ->
+                viewModel.updateUiStateForSelectedAirport(selectedAirport)
             },
         )
     }

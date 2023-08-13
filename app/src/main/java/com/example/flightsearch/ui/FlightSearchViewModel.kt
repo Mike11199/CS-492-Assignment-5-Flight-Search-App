@@ -41,11 +41,21 @@ class FlightSearchViewModel (private val airportDao: AirportDao, private val fav
     fun searchAirports(
         searchString: String): Flow<List<Airport>> = airportDao.searchAirport(searchString)
 
+    fun searchDestinations(
+        destinationId: Int): Flow<List<Airport>> = airportDao.searchDestination(destinationId)
 
     fun updateUiStateForSearchedAirport(searchString: String) {
         _uiState.update {
             it.copy(
                 searchString = searchString
+            )
+        }
+    }
+
+    fun updateUiStateForSelectedAirport(selectedAirport: Int) {
+        _uiState.update {
+            it.copy(
+                selectedAirport = selectedAirport
             )
         }
     }

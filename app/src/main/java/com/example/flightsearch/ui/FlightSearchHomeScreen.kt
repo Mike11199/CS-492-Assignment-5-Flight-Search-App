@@ -58,15 +58,19 @@ fun FlightSearchHomeScreen(
     flightSearchUIState: FlightSearchUIState,
     modifier: Modifier = Modifier,
     airports: List<Airport>,
+    destinationAirports: List<Airport>,
     onClickNavigateToScreen: (screenType: ScreenType) -> Unit,
     updateUIForSearchText: (searchString: String) -> Unit,
+    updateUiStateForSelectedAirport: (selectedAirport: Int) -> Unit,
     ) {
     Box(){
         FlightSearchAppContent(
             flightSearchUIState = flightSearchUIState,
             airports = airports,
+            destinationAirports = destinationAirports,
             onClickNavigateToScreen = onClickNavigateToScreen,
             updateUIForSearchText = updateUIForSearchText,
+            updateUiStateForSelectedAirport = updateUiStateForSelectedAirport
         )
     }
 }
@@ -124,8 +128,10 @@ fun FlightSearchInputBox(
 private fun FlightSearchAppContent(
     flightSearchUIState: FlightSearchUIState,
     airports: List<Airport>,
+    destinationAirports: List<Airport>,
     updateUIForSearchText: (searchString: String) -> Unit,
     onClickNavigateToScreen: (screenType: ScreenType) -> Unit,
+    updateUiStateForSelectedAirport: (selectedAirport: Int) -> Unit,
 ){
     FlightSearchTopAppBar(
         flightSearchUIState = flightSearchUIState,
@@ -137,26 +143,68 @@ private fun FlightSearchAppContent(
         onClickNavigateToScreen = onClickNavigateToScreen
     )
     if (flightSearchUIState.currentScreen == ScreenType.Home) {
-
-        //TODO: show favorites list
+            //TODO: Show favorites list
     }
     else if (flightSearchUIState.currentScreen == ScreenType.AutoComplete) {
-
-        LazyColumn(
-            Modifier.padding(top = 160.dp),
-            verticalArrangement = Arrangement.spacedBy(.1.dp) // Adjust the spacing here
-
-        ) {
-            itemsIndexed(airports) { index, airport ->
-                FlightItemCard(
-                    airport = airport,
-                    onClickNavigateToScreen = onClickNavigateToScreen
-                )
-//                Spacer(modifier = Modifier.height(1.dp))
-            }
-        }
+        AutoCompleteList(
+            onClickNavigateToScreen = onClickNavigateToScreen,
+            airports = airports,
+            updateUiStateForSelectedAirport = updateUiStateForSelectedAirport
+        )
+    }
+    else if (flightSearchUIState.currentScreen == ScreenType.AirportDetail){
+        DestinationList(
+            onClickNavigateToScreen = onClickNavigateToScreen,
+            airports = destinationAirports,
+            updateUiStateForSelectedAirport = updateUiStateForSelectedAirport
+            )
     }
 
+}
+
+@Composable
+fun AutoCompleteList(
+    onClickNavigateToScreen: (screenType: ScreenType) -> Unit,
+    airports: List<Airport>,
+    updateUiStateForSelectedAirport: (selectedAirport: Int) -> Unit
+){
+    LazyColumn(
+        Modifier.padding(top = 160.dp),
+        verticalArrangement = Arrangement.spacedBy(.1.dp) // Adjust the spacing here
+
+    ) {
+        itemsIndexed(airports) { index, airport ->
+            FlightItemCard(
+                airport = airport,
+                onClickNavigateToScreen = onClickNavigateToScreen,
+                updateUiStateForSelectedAirport = updateUiStateForSelectedAirport
+            )
+//                Spacer(modifier = Modifier.height(1.dp))
+        }
+    }
+}
+
+
+@Composable
+fun DestinationList(
+    onClickNavigateToScreen: (screenType: ScreenType) -> Unit,
+    airports: List<Airport>,
+    updateUiStateForSelectedAirport: (selectedAirport: Int) -> Unit
+){
+    LazyColumn(
+        Modifier.padding(top = 160.dp),
+        verticalArrangement = Arrangement.spacedBy(.1.dp) // Adjust the spacing here
+
+    ) {
+        itemsIndexed(airports) { index, airport ->
+            DestinationCard(
+                airport = airport,
+                onClickNavigateToScreen = onClickNavigateToScreen,
+                updateUiStateForSelectedAirport = updateUiStateForSelectedAirport
+            )
+            Spacer(modifier = Modifier.height(15.dp))
+        }
+    }
 }
 
 
@@ -166,12 +214,17 @@ fun FlightItemCard(
     airport: Airport,
     modifier: Modifier = Modifier,
     onClickNavigateToScreen: (screenType: ScreenType) -> Unit,
+    updateUiStateForSelectedAirport: (selectedAirport: Int) -> Unit,
 ) {
     Card(
-        onClick = {onClickNavigateToScreen(ScreenType.AirportDetail)},
+        onClick = {
+            onClickNavigateToScreen(ScreenType.AirportDetail)
+            updateUiStateForSelectedAirport(airport.id)
+            },
+
         modifier
             .padding(start = 20.dp, end = 20.dp),
-        shape = RoundedCornerShape(10),
+        shape = RoundedCornerShape(4),
         colors = CardDefaults.cardColors(
 //            containerColor = Color(145,153,255, 250),
             containerColor = Color.DarkGray
@@ -272,4 +325,66 @@ private fun FlightSearchTopAppBar(
     }
 }
 
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DestinationCard(
+    airport: Airport,
+    modifier: Modifier = Modifier,
+    onClickNavigateToScreen: (screenType: ScreenType) -> Unit,
+    updateUiStateForSelectedAirport: (selectedAirport: Int) -> Unit,
+) {
+    Card(
+        onClick = {
+            onClickNavigateToScreen(ScreenType.AirportDetail)
+            updateUiStateForSelectedAirport(airport.id)
+        },
+
+        modifier
+            .padding(start = 20.dp, end = 20.dp),
+        shape = RoundedCornerShape(10),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(145,153,255, 250),
+
+        )
+    )
+    {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(start = 15.dp, end = 15.dp, top = 5.dp, bottom = 5.dp)
+                .fillMaxWidth()
+                .height(150.dp)
+        ){
+            Row(
+                Modifier
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .padding(end=15.dp),
+                ) {
+                    Text(
+                        text = airport.iata_code,
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp,
+                        color = Color.White
+                    )
+                }
+                Row(
+                    modifier = Modifier
+                ) {
+                    Text(
+                        text = airport.name,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 14.sp,
+                        overflow = TextOverflow.Ellipsis,
+                        color = Color.White
+                    )
+                }
+            }
+        }
+    }
+}
 
