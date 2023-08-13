@@ -30,26 +30,28 @@ import com.example.flightsearch.data.Airport
 fun FlightSearchHomeScreen(
     flightSearchUIState: FlightSearchUIState,
     modifier: Modifier = Modifier,
+    airports: List<Airport>,
     ) {
     Box(){
         FlightSearchAppContent(
-            flightSearchUIState = flightSearchUIState
+            flightSearchUIState = flightSearchUIState,
+            airports = airports
         )
     }
-
 }
 
 
 @Composable
 private fun FlightSearchAppContent(
     flightSearchUIState: FlightSearchUIState,
+    airports: List<Airport>,
 ){
-    val airports = listOf(
-        Airport(1, "SMF", "Sacramento", 2343),
-        Airport(2, "LAX", "Los Angeles", 4567),
-        Airport(3, "JFK", "New York", 7890),
-        Airport(4, "ORD", "Chicago", 5678)
-    )
+//    val airports = listOf(
+//        Airport(1, "SMF", "Sacramento", 2343),
+//        Airport(2, "LAX", "Los Angeles", 4567),
+//        Airport(3, "JFK", "New York", 7890),
+//        Airport(4, "ORD", "Chicago", 5678)
+//    )
 
     LazyColumn (
         Modifier.padding(top = 80.dp)

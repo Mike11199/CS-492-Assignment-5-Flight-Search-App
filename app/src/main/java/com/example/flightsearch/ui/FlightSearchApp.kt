@@ -13,9 +13,11 @@ fun FlightSearchApp(
 ) {
     val flightSearchUIState = viewModel.uiState.collectAsState().value
     val allAirports by viewModel.getAllAirports().collectAsState(emptyList())
+
     Box() {
         FlightSearchHomeScreen(
-            flightSearchUIState = flightSearchUIState
+            flightSearchUIState = flightSearchUIState,
+            airports = allAirports
         )
     }
 }
