@@ -58,17 +58,15 @@ fun FlightSearchHomeScreen(
     flightSearchUIState: FlightSearchUIState,
     modifier: Modifier = Modifier,
     airports: List<Airport>,
-    onClickToNavigateToHomePage: () -> Unit,
+    onClickNavigateToScreen: (screenType: ScreenType) -> Unit,
     updateUIForSearchText: (searchString: String) -> Unit,
-    onAutoCompleteClick:() -> Unit,
     ) {
     Box(){
         FlightSearchAppContent(
             flightSearchUIState = flightSearchUIState,
             airports = airports,
-            onClickToNavigateToHomePage = onClickToNavigateToHomePage,
+            onClickNavigateToScreen = onClickNavigateToScreen,
             updateUIForSearchText = updateUIForSearchText,
-            onAutoCompleteClick = onAutoCompleteClick
         )
     }
 }
@@ -79,7 +77,7 @@ fun FlightSearchHomeScreen(
 fun FlightSearchInputBox(
     flightSearchUIState: FlightSearchUIState,
     updateUIForSearchText: (searchString: String) -> Unit,
-    onClickToNavigateToHomePage: () -> Unit,
+    onClickNavigateToScreen: (screenType: ScreenType) -> Unit,
 ) {
     var text by remember { mutableStateOf("") }
     Row(
@@ -96,10 +94,14 @@ fun FlightSearchInputBox(
             keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done,
             keyboardType = KeyboardType.Password),
             onValueChange = {
-                onClickToNavigateToHomePage()
-                //get rid of new lines!!!
                 text = it.replace("\n", "")
-                updateUIForSearchText(it.replace("\n", ""))},
+                updateUIForSearchText(it.replace("\n", ""))
+                if (text == ""){
+                    onClickNavigateToScreen(ScreenType.Home)
+                } else{
+                    onClickNavigateToScreen(ScreenType.AutoComplete)
+                }
+                },
 //            value = text,
 //            onValueChange = { text = it },
             label = { Text("Enter departure airport") },
@@ -122,20 +124,23 @@ fun FlightSearchInputBox(
 private fun FlightSearchAppContent(
     flightSearchUIState: FlightSearchUIState,
     airports: List<Airport>,
-    onClickToNavigateToHomePage: () -> Unit,
     updateUIForSearchText: (searchString: String) -> Unit,
-    onAutoCompleteClick:() -> Unit,
+    onClickNavigateToScreen: (screenType: ScreenType) -> Unit,
 ){
     FlightSearchTopAppBar(
         flightSearchUIState = flightSearchUIState,
-        onClickToNavigateToHomePage = onClickToNavigateToHomePage
+        onClickNavigateToScreen = onClickNavigateToScreen
     )
     FlightSearchInputBox(
         flightSearchUIState = flightSearchUIState,
         updateUIForSearchText = updateUIForSearchText,
-        onClickToNavigateToHomePage = onClickToNavigateToHomePage,
+        onClickNavigateToScreen = onClickNavigateToScreen
     )
     if (flightSearchUIState.currentScreen == ScreenType.Home) {
+
+        //TODO: show favorites list
+    }
+    else if (flightSearchUIState.currentScreen == ScreenType.AutoComplete) {
 
         LazyColumn(
             Modifier.padding(top = 160.dp),
@@ -145,16 +150,13 @@ private fun FlightSearchAppContent(
             itemsIndexed(airports) { index, airport ->
                 FlightItemCard(
                     airport = airport,
-                    onAutoCompleteClick = onAutoCompleteClick,
+                    onClickNavigateToScreen = onClickNavigateToScreen
                 )
 //                Spacer(modifier = Modifier.height(1.dp))
             }
         }
     }
-    else if (flightSearchUIState.currentScreen == ScreenType.Home) {
 
-
-    }
 }
 
 
@@ -163,10 +165,10 @@ private fun FlightSearchAppContent(
 fun FlightItemCard(
     airport: Airport,
     modifier: Modifier = Modifier,
-    onAutoCompleteClick:() -> Unit,
+    onClickNavigateToScreen: (screenType: ScreenType) -> Unit,
 ) {
     Card(
-        onClick = onAutoCompleteClick,
+        onClick = {onClickNavigateToScreen(ScreenType.AirportDetail)},
         modifier
             .padding(start = 20.dp, end = 20.dp),
         shape = RoundedCornerShape(10),
@@ -220,7 +222,7 @@ fun FlightItemCard(
 private fun FlightSearchTopAppBar(
     flightSearchUIState: FlightSearchUIState,
     modifier: Modifier = Modifier,
-    onClickToNavigateToHomePage: () -> Unit,
+    onClickNavigateToScreen: (screenType: ScreenType) -> Unit,
 ) {
 
     val currentPage = flightSearchUIState.currentScreen
@@ -234,7 +236,7 @@ private fun FlightSearchTopAppBar(
         if (currentPage != ScreenType.Home) {
             IconButton(
                 onClick = {
-                        onClickToNavigateToHomePage()
+                    onClickNavigateToScreen(ScreenType.Home)
                 },
                 modifier = Modifier.align(Alignment.TopStart)
             ) {

@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.flightsearch.data.ScreenType
 import com.example.flightsearch.ui.FlightSearchViewModel
 
 
@@ -19,14 +20,11 @@ fun FlightSearchApp(
         FlightSearchHomeScreen(
             flightSearchUIState = flightSearchUIState,
             airports = searchedAirports,
-            onClickToNavigateToHomePage = {
-                viewModel.navigateToHomePage()
+            onClickNavigateToScreen = { screenType: ScreenType ->
+                viewModel.navigateToScreen(screenType)
             },
             updateUIForSearchText = {searchString: String ->
                 viewModel.updateUiStateForSearchedAirport(searchString)
-            },
-            onAutoCompleteClick = {
-                viewModel.navigateToAirportDetail()
             },
         )
     }

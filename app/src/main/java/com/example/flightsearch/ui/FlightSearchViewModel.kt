@@ -50,19 +50,10 @@ class FlightSearchViewModel (private val airportDao: AirportDao, private val fav
         }
     }
 
-
-    fun navigateToHomePage() {
+    fun navigateToScreen(screenType: ScreenType) {
         _uiState.update {
             it.copy(
-                currentScreen = ScreenType.Home
-            )
-        }
-    }
-
-    fun navigateToAirportDetail() {
-        _uiState.update {
-            it.copy(
-                currentScreen = ScreenType.AirportDetail
+                currentScreen = screenType
             )
         }
     }
