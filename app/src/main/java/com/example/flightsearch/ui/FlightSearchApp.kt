@@ -13,13 +13,17 @@ fun FlightSearchApp(
 ) {
     val flightSearchUIState = viewModel.uiState.collectAsState().value
     val allAirports by viewModel.getAllAirports().collectAsState(emptyList())
+    val searchedAirports by viewModel.searchAirports(flightSearchUIState.searchString).collectAsState(emptyList())
 
     Box() {
         FlightSearchHomeScreen(
             flightSearchUIState = flightSearchUIState,
-            airports = allAirports,
+            airports = searchedAirports,
             onClickToNavigateToHomePage = {
                 viewModel.navigateToHomePage()
+            },
+            updateUIForSearchText = {searchString: String ->
+                viewModel.updateUiStateForSearchedAirport(searchString)
             },
         )
     }

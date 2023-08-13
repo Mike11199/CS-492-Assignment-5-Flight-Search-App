@@ -38,6 +38,17 @@ class FlightSearchViewModel (private val airportDao: AirportDao, private val fav
 
     fun getAllAirports(): Flow<List<Airport>> = airportDao.getAll()
     fun getAllFavorites(): Flow<List<Favorite>> = favoriteDao.getAll()
+    fun searchAirports(
+        searchString: String): Flow<List<Airport>> = airportDao.searchAirport(searchString)
+
+
+    fun updateUiStateForSearchedAirport(searchString: String) {
+        _uiState.update {
+            it.copy(
+                searchString = searchString
+            )
+        }
+    }
 
 
     fun navigateToHomePage() {

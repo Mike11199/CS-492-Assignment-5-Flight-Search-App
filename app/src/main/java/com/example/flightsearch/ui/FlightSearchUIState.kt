@@ -4,5 +4,6 @@ import com.example.flightsearch.data.ScreenType
 
 
 data class FlightSearchUIState(
-    val currentScreen: ScreenType = ScreenType.Home
+    val currentScreen: ScreenType = ScreenType.Home,
+    val searchString: String = "",
 ){}

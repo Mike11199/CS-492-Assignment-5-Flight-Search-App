@@ -49,18 +49,23 @@ fun FlightSearchHomeScreen(
     modifier: Modifier = Modifier,
     airports: List<Airport>,
     onClickToNavigateToHomePage: () -> Unit,
+    updateUIForSearchText: (searchString: String) -> Unit,
     ) {
     Box(){
         FlightSearchAppContent(
             flightSearchUIState = flightSearchUIState,
             airports = airports,
-            onClickToNavigateToHomePage = onClickToNavigateToHomePage
+            onClickToNavigateToHomePage = onClickToNavigateToHomePage,
+            updateUIForSearchText = updateUIForSearchText
         )
     }
 }
 
 @Composable
-fun FlightSearchInputBox() {
+fun FlightSearchInputBox(
+    flightSearchUIState: FlightSearchUIState,
+    updateUIForSearchText: (searchString: String) -> Unit,
+) {
     var text by remember { mutableStateOf("") }
     Row(
         Modifier
@@ -69,7 +74,11 @@ fun FlightSearchInputBox() {
     ){
         TextField(
             value = text,
-            onValueChange = { text = it },
+            onValueChange = {
+                text = it
+                updateUIForSearchText(it)},
+//            value = text,
+//            onValueChange = { text = it },
             label = { Text("Enter departure airport") },
             modifier = Modifier
                 .padding(start = 25.dp, end = 25.dp, top = 2.dp, bottom = 2.dp)
@@ -90,12 +99,16 @@ private fun FlightSearchAppContent(
     flightSearchUIState: FlightSearchUIState,
     airports: List<Airport>,
     onClickToNavigateToHomePage: () -> Unit,
+    updateUIForSearchText: (searchString: String) -> Unit,
 ){
     FlightSearchTopAppBar(
         flightSearchUIState = flightSearchUIState,
         onClickToNavigateToHomePage = onClickToNavigateToHomePage
     )
-    FlightSearchInputBox()
+    FlightSearchInputBox(
+        flightSearchUIState = flightSearchUIState,
+        updateUIForSearchText = updateUIForSearchText
+    )
     LazyColumn (
         Modifier.padding(top = 160.dp)
     ) {
