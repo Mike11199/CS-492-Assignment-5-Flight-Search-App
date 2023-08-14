@@ -1,7 +1,8 @@
 # CS-492-Assignment-5-Flight-Search-App
 
-![image](https://github.com/Mike11199/CS-492-Assignment-5-Flight-Search-App/assets/91037796/079ac0fc-73e9-468a-b292-6f5c990b9795)
+![flight_search_app](https://github.com/Mike11199/CS-492-Assignment-5-Flight-Search-App/assets/91037796/0eeb0300-0934-41b0-af74-6f77f01e08f3)
 
+![image](https://github.com/Mike11199/CS-492-Assignment-5-Flight-Search-App/assets/91037796/079ac0fc-73e9-468a-b292-6f5c990b9795)
 
 ![image](https://github.com/Mike11199/CS-492-Assignment-5-Flight-Search-App/assets/91037796/724d26fb-a1fb-4dde-90e0-f4ae6e40be6e)
 
