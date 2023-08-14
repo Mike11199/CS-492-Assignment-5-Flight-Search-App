@@ -8,7 +8,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.flightsearch.data.Airport
 import com.example.flightsearch.data.Favorite
 import com.example.flightsearch.data.ScreenType
-import com.example.flightsearch.ui.FlightSearchViewModel
 import kotlinx.coroutines.launch
 
 
