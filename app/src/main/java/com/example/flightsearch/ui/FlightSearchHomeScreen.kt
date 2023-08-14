@@ -581,10 +581,12 @@ fun FavoriteCard(
                     .fillMaxWidth(.75f)
 //                    .height(100.dp)
             ){
-                Column() {
+
                     Row(
-                        Modifier
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
                     ) {
+
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
@@ -600,14 +602,15 @@ fun FavoriteCard(
                         }
                     }
                     Row(
+                        verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
-                            .padding(bottom = 15.dp),
+//                            .padding(bottom = 15.dp),
                     ) {
 //                    Spacer(modifier = Modifier.width(15.dp))
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
-                                .padding(end=15.dp),
+                                .padding(end=35.dp),
                         ) {
                             Text(
                                 text = favorite.departure_code,
@@ -662,7 +665,7 @@ fun FavoriteCard(
                         }
                     }
                 }
-            }
+
             Row(
                 modifier = Modifier
             ) {
