@@ -23,6 +23,8 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,6 +42,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.graphics.RectangleShape
@@ -53,7 +56,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import com.example.flightsearch.data.Airport
+import com.example.flightsearch.data.Favorite
 import com.example.flightsearch.data.ScreenType
+import kotlinx.coroutines.launch
 
 @Composable
 fun FlightSearchHomeScreen(
@@ -64,6 +69,7 @@ fun FlightSearchHomeScreen(
     onClickNavigateToScreen: (screenType: ScreenType) -> Unit,
     updateUIForSearchText: (searchString: String) -> Unit,
     updateUiStateForSelectedAirport: (selectedAirport: Airport) -> Unit,
+    onClickAddFavorite: (favorite: Favorite) -> Unit,
     ) {
     Box(){
         FlightSearchAppContent(
@@ -71,6 +77,7 @@ fun FlightSearchHomeScreen(
             airports = airports,
             destinationAirports = destinationAirports,
             onClickNavigateToScreen = onClickNavigateToScreen,
+            onClickAddFavorite = onClickAddFavorite,
             updateUIForSearchText = updateUIForSearchText,
             updateUiStateForSelectedAirport = updateUiStateForSelectedAirport
         )
@@ -134,6 +141,7 @@ private fun FlightSearchAppContent(
     updateUIForSearchText: (searchString: String) -> Unit,
     onClickNavigateToScreen: (screenType: ScreenType) -> Unit,
     updateUiStateForSelectedAirport: (selectedAirport: Airport) -> Unit,
+    onClickAddFavorite: (favorite: Favorite) -> Unit,
 ){
     FlightSearchTopAppBar(
         flightSearchUIState = flightSearchUIState,
@@ -159,7 +167,8 @@ private fun FlightSearchAppContent(
             onClickNavigateToScreen = onClickNavigateToScreen,
             airports = destinationAirports,
             updateUiStateForSelectedAirport = updateUiStateForSelectedAirport,
-            flightSearchUIState = flightSearchUIState
+            flightSearchUIState = flightSearchUIState,
+            onClickAddFavorite = onClickAddFavorite
             )
     }
 
@@ -194,6 +203,7 @@ fun DestinationList(
     airports: List<Airport>,
     updateUiStateForSelectedAirport: (selectedAirport: Airport) -> Unit,
     flightSearchUIState: FlightSearchUIState,
+    onClickAddFavorite: (favorite: Favorite) -> Unit,
 ){
     LazyColumn(
         Modifier.padding(top = 160.dp),
@@ -202,6 +212,7 @@ fun DestinationList(
     ) {
         itemsIndexed(airports) { index, airport ->
             DestinationCard(
+                onClickAddFavorite = onClickAddFavorite,
                 airport = airport,
                 flightSearchUIState = flightSearchUIState
             )
@@ -335,13 +346,13 @@ fun DestinationCard(
     airport: Airport,
     modifier: Modifier = Modifier,
     flightSearchUIState: FlightSearchUIState,
+    onClickAddFavorite: (favorite: Favorite) -> Unit,
 ) {
 
     val selectedAirport = flightSearchUIState.selectedAirportObject
 
     Card(
         onClick = {
-
         },
         modifier
             .padding(start = 20.dp, end = 20.dp),
@@ -354,16 +365,15 @@ fun DestinationCard(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .padding(start = 15.dp, end = 15.dp, top = 5.dp, bottom = 5.dp)
+                .padding(start = 15.dp, end = 1.dp, top = 5.dp, bottom = 5.dp)
                 .fillMaxWidth()
 //                .height(100.dp)
-
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
 //                    .padding(start = 15.dp, end = 15.dp, top = 5.dp, bottom = 5.dp)
-                    .fillMaxWidth(.9f)
+                    .fillMaxWidth(.75f)
 //                    .height(100.dp)
             ){
                 Column() {
@@ -465,13 +475,32 @@ fun DestinationCard(
             Row(
                 modifier = Modifier
             ) {
-                Icon(
-                    imageVector = Icons.Default.Star,
-                    contentDescription = "favorite",
-                    tint = Color.Gray,
-                    modifier = Modifier
-                        .fillMaxSize(.9f)
-                )
+
+                Button(
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = Color.Transparent
+                    ),
+                    onClick = {
+                            onClickAddFavorite(
+                                Favorite(
+                                    departure_code = selectedAirport.iata_code,
+                                    destination_code = airport.iata_code
+                                )
+                            )
+                    },
+                ){
+                    Icon(
+                        imageVector = Icons.Default.Star,
+                        contentDescription = "favorite",
+                        tint = Color(244,214,79, 250),
+                        modifier = Modifier
+                            .fillMaxSize(1f)
+                            .background(
+                                color = Color.Transparent,
+                            )
+                    )
+                }
             }
         }
 

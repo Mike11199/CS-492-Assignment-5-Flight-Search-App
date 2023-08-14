@@ -41,6 +41,10 @@ class FlightSearchViewModel (private val airportDao: AirportDao, private val fav
     fun searchAirports(
         searchString: String): Flow<List<Airport>> = airportDao.searchAirport(searchString)
 
+    suspend fun saveItem(favoriteItem: Favorite) = favoriteDao.addFavorite(favoriteItem)
+
+
+
     fun searchDestinations(
         destinationId: Int): Flow<List<Airport>> = airportDao.searchDestination(destinationId)
 
