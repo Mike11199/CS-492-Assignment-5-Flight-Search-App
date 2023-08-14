@@ -329,8 +329,16 @@ fun FavoriteList(
     flightSearchUIState: FlightSearchUIState,
     onClickRemoveFavorite: (favorite: Favorite) -> Unit,
 ){
+    Text(
+        modifier = Modifier.padding(top = 160.dp, start = 25.dp),
+        text = "Favorites",
+        color = Color.White,
+        textAlign = TextAlign.Center,
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Bold,
+    )
     LazyColumn(
-        Modifier.padding(top = 160.dp),
+        Modifier.padding(top = 200.dp),
         verticalArrangement = Arrangement.spacedBy(.1.dp) // Adjust the spacing here
 
     ) {
