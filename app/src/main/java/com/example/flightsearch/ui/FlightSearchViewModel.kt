@@ -52,10 +52,11 @@ class FlightSearchViewModel (private val airportDao: AirportDao, private val fav
         }
     }
 
-    fun updateUiStateForSelectedAirport(selectedAirport: Int) {
+    fun updateUiStateForSelectedAirport(selectedAirport: Airport) {
         _uiState.update {
             it.copy(
-                selectedAirport = selectedAirport
+                selectedAirport = selectedAirport.id,
+                selectedAirportObject = selectedAirport
             )
         }
     }

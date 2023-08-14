@@ -63,7 +63,7 @@ fun FlightSearchHomeScreen(
     destinationAirports: List<Airport>,
     onClickNavigateToScreen: (screenType: ScreenType) -> Unit,
     updateUIForSearchText: (searchString: String) -> Unit,
-    updateUiStateForSelectedAirport: (selectedAirport: Int) -> Unit,
+    updateUiStateForSelectedAirport: (selectedAirport: Airport) -> Unit,
     ) {
     Box(){
         FlightSearchAppContent(
@@ -133,7 +133,7 @@ private fun FlightSearchAppContent(
     destinationAirports: List<Airport>,
     updateUIForSearchText: (searchString: String) -> Unit,
     onClickNavigateToScreen: (screenType: ScreenType) -> Unit,
-    updateUiStateForSelectedAirport: (selectedAirport: Int) -> Unit,
+    updateUiStateForSelectedAirport: (selectedAirport: Airport) -> Unit,
 ){
     FlightSearchTopAppBar(
         flightSearchUIState = flightSearchUIState,
@@ -158,7 +158,8 @@ private fun FlightSearchAppContent(
         DestinationList(
             onClickNavigateToScreen = onClickNavigateToScreen,
             airports = destinationAirports,
-            updateUiStateForSelectedAirport = updateUiStateForSelectedAirport
+            updateUiStateForSelectedAirport = updateUiStateForSelectedAirport,
+            flightSearchUIState = flightSearchUIState
             )
     }
 
@@ -168,7 +169,7 @@ private fun FlightSearchAppContent(
 fun AutoCompleteList(
     onClickNavigateToScreen: (screenType: ScreenType) -> Unit,
     airports: List<Airport>,
-    updateUiStateForSelectedAirport: (selectedAirport: Int) -> Unit
+    updateUiStateForSelectedAirport: (selectedAirport: Airport) -> Unit
 ){
     LazyColumn(
         Modifier.padding(top = 160.dp),
@@ -191,7 +192,8 @@ fun AutoCompleteList(
 fun DestinationList(
     onClickNavigateToScreen: (screenType: ScreenType) -> Unit,
     airports: List<Airport>,
-    updateUiStateForSelectedAirport: (selectedAirport: Int) -> Unit
+    updateUiStateForSelectedAirport: (selectedAirport: Airport) -> Unit,
+    flightSearchUIState: FlightSearchUIState,
 ){
     LazyColumn(
         Modifier.padding(top = 160.dp),
@@ -201,6 +203,7 @@ fun DestinationList(
         itemsIndexed(airports) { index, airport ->
             DestinationCard(
                 airport = airport,
+                flightSearchUIState = flightSearchUIState
             )
             Spacer(modifier = Modifier.height(15.dp))
         }
@@ -214,12 +217,12 @@ fun FlightItemCard(
     airport: Airport,
     modifier: Modifier = Modifier,
     onClickNavigateToScreen: (screenType: ScreenType) -> Unit,
-    updateUiStateForSelectedAirport: (selectedAirport: Int) -> Unit,
+    updateUiStateForSelectedAirport: (selectedAirport: Airport) -> Unit,
 ) {
     Card(
         onClick = {
             onClickNavigateToScreen(ScreenType.AirportDetail)
-            updateUiStateForSelectedAirport(airport.id)
+            updateUiStateForSelectedAirport(airport)
             },
 
         modifier
@@ -331,7 +334,11 @@ private fun FlightSearchTopAppBar(
 fun DestinationCard(
     airport: Airport,
     modifier: Modifier = Modifier,
+    flightSearchUIState: FlightSearchUIState,
 ) {
+
+    val selectedAirport = flightSearchUIState.selectedAirportObject
+
     Card(
         onClick = {
 
@@ -341,7 +348,6 @@ fun DestinationCard(
         shape = RoundedCornerShape(10),
         colors = CardDefaults.cardColors(
             containerColor = Color(5,50,115, 250),
-
         )
     )
     {
@@ -350,7 +356,8 @@ fun DestinationCard(
             modifier = Modifier
                 .padding(start = 15.dp, end = 15.dp, top = 5.dp, bottom = 5.dp)
                 .fillMaxWidth()
-                .height(100.dp)
+//                .height(100.dp)
+
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -388,7 +395,7 @@ fun DestinationCard(
                                 .padding(end=15.dp),
                         ) {
                             Text(
-                                text = airport.iata_code,
+                                text = selectedAirport.iata_code,
                                 textAlign = TextAlign.Center,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 14.sp,
@@ -399,7 +406,7 @@ fun DestinationCard(
                             modifier = Modifier
                         ) {
                             Text(
-                                text = airport.name,
+                                text = selectedAirport.name,
                                 fontWeight = FontWeight.Normal,
                                 fontSize = 14.sp,
                                 overflow = TextOverflow.Ellipsis,
