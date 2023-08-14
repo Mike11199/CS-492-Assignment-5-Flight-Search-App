@@ -65,21 +65,25 @@ fun FlightSearchHomeScreen(
     flightSearchUIState: FlightSearchUIState,
     modifier: Modifier = Modifier,
     airports: List<Airport>,
+    favorites: List<Favorite>,
     destinationAirports: List<Airport>,
     onClickNavigateToScreen: (screenType: ScreenType) -> Unit,
     updateUIForSearchText: (searchString: String) -> Unit,
     updateUiStateForSelectedAirport: (selectedAirport: Airport) -> Unit,
     onClickAddFavorite: (favorite: Favorite) -> Unit,
+    onClickRemoveFavorite: (favorite: Favorite) -> Unit,
     ) {
     Box(){
         FlightSearchAppContent(
             flightSearchUIState = flightSearchUIState,
+            favorites = favorites,
             airports = airports,
             destinationAirports = destinationAirports,
             onClickNavigateToScreen = onClickNavigateToScreen,
             onClickAddFavorite = onClickAddFavorite,
             updateUIForSearchText = updateUIForSearchText,
-            updateUiStateForSelectedAirport = updateUiStateForSelectedAirport
+            updateUiStateForSelectedAirport = updateUiStateForSelectedAirport,
+            onClickRemoveFavorite = onClickRemoveFavorite
         )
     }
 }
@@ -137,11 +141,13 @@ fun FlightSearchInputBox(
 private fun FlightSearchAppContent(
     flightSearchUIState: FlightSearchUIState,
     airports: List<Airport>,
+    favorites: List<Favorite>,
     destinationAirports: List<Airport>,
     updateUIForSearchText: (searchString: String) -> Unit,
     onClickNavigateToScreen: (screenType: ScreenType) -> Unit,
     updateUiStateForSelectedAirport: (selectedAirport: Airport) -> Unit,
     onClickAddFavorite: (favorite: Favorite) -> Unit,
+    onClickRemoveFavorite: (favorite: Favorite) -> Unit,
 ){
     FlightSearchTopAppBar(
         flightSearchUIState = flightSearchUIState,
@@ -153,7 +159,13 @@ private fun FlightSearchAppContent(
         onClickNavigateToScreen = onClickNavigateToScreen
     )
     if (flightSearchUIState.currentScreen == ScreenType.Home) {
-            //TODO: Show favorites list
+        FavoriteList(
+            onClickNavigateToScreen = onClickNavigateToScreen,
+            favorites = favorites,
+            updateUiStateForSelectedAirport = updateUiStateForSelectedAirport,
+            flightSearchUIState = flightSearchUIState,
+            onClickRemoveFavorite = onClickRemoveFavorite
+        )
     }
     else if (flightSearchUIState.currentScreen == ScreenType.AutoComplete) {
         AutoCompleteList(
@@ -507,3 +519,176 @@ fun DestinationCard(
     }
 }
 
+
+@Composable
+fun FavoriteList(
+    onClickNavigateToScreen: (screenType: ScreenType) -> Unit,
+    favorites: List<Favorite>,
+    updateUiStateForSelectedAirport: (selectedAirport: Airport) -> Unit,
+    flightSearchUIState: FlightSearchUIState,
+    onClickRemoveFavorite: (favorite: Favorite) -> Unit,
+){
+    LazyColumn(
+        Modifier.padding(top = 160.dp),
+        verticalArrangement = Arrangement.spacedBy(.1.dp) // Adjust the spacing here
+
+    ) {
+        itemsIndexed(favorites) { index, favorite ->
+            FavoriteCard(
+                onClickRemoveFavorite = onClickRemoveFavorite,
+                favorite = favorite,
+                flightSearchUIState = flightSearchUIState
+            )
+            Spacer(modifier = Modifier.height(15.dp))
+        }
+    }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FavoriteCard(
+    favorite: Favorite,
+    modifier: Modifier = Modifier,
+    flightSearchUIState: FlightSearchUIState,
+    onClickRemoveFavorite: (favorite: Favorite) -> Unit,
+) {
+
+    val selectedAirport = flightSearchUIState.selectedAirportObject
+
+    Card(
+        onClick = {
+        },
+        modifier
+            .padding(start = 20.dp, end = 20.dp),
+        shape = RoundedCornerShape(10),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(5,50,115, 250),
+        )
+    )
+    {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(start = 15.dp, end = 1.dp, top = 5.dp, bottom = 5.dp)
+                .fillMaxWidth()
+//                .height(100.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+//                    .padding(start = 15.dp, end = 15.dp, top = 5.dp, bottom = 5.dp)
+                    .fillMaxWidth(.75f)
+//                    .height(100.dp)
+            ){
+                Column() {
+                    Row(
+                        Modifier
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .padding(end=15.dp),
+                        ) {
+                            Text(
+                                text = "DEPART",
+                                textAlign = TextAlign.Center,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 14.sp,
+                                color = Color.Gray
+                            )
+                        }
+                    }
+                    Row(
+                        modifier = Modifier
+                            .padding(bottom = 15.dp),
+                    ) {
+//                    Spacer(modifier = Modifier.width(15.dp))
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .padding(end=15.dp),
+                        ) {
+                            Text(
+                                text = favorite.departure_code,
+                                textAlign = TextAlign.Center,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 14.sp,
+                                color = Color.White
+                            )
+                        }
+                        Row(
+                            modifier = Modifier
+                        ) {
+                        }
+                    }
+                    Row(
+                        Modifier
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .padding(end=15.dp),
+                        ) {
+                            Text(
+                                text = "ARRIVE",
+                                textAlign = TextAlign.Center,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 14.sp,
+                                color = Color.Gray
+                            )
+                        }
+                    }
+                    Row(
+                        Modifier
+                    ) {
+//                    Spacer(modifier = Modifier.width(15.dp))
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .padding(end=15.dp),
+                        ) {
+                            Text(
+                                text = favorite.destination_code,
+                                textAlign = TextAlign.Center,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 14.sp,
+                                color = Color.White
+                            )
+                        }
+                        Row(
+                            modifier = Modifier
+                        ) {
+                        }
+                    }
+                }
+            }
+            Row(
+                modifier = Modifier
+            ) {
+
+                Button(
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = Color.Transparent
+                    ),
+                    onClick = {
+                        onClickRemoveFavorite(favorite)
+                    },
+                ){
+                    Icon(
+                        imageVector = Icons.Default.Star,
+                        contentDescription = "favorite",
+                        tint = Color(244,214,79, 250),
+                        modifier = Modifier
+                            .fillMaxSize(1f)
+                            .background(
+                                color = Color.Transparent,
+                            )
+                    )
+                }
+            }
+        }
+
+    }
+}

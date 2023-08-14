@@ -18,7 +18,7 @@ fun FlightSearchApp(
 
 ) {
     val flightSearchUIState = viewModel.uiState.collectAsState().value
-//    val allAirports by viewModel.getAllAirports().collectAsState(emptyList())
+    val favorites by viewModel.getAllFavorites().collectAsState(emptyList())
     val searchedAirports by viewModel.searchAirports(flightSearchUIState.searchString).collectAsState(emptyList())
     val destinationAirports by viewModel.searchDestinations(flightSearchUIState.selectedAirport).collectAsState(emptyList())
     val coroutineScope = rememberCoroutineScope()
@@ -26,6 +26,7 @@ fun FlightSearchApp(
 
     Box() {
         FlightSearchHomeScreen(
+            favorites = favorites,
             flightSearchUIState = flightSearchUIState,
             airports = searchedAirports,
             destinationAirports = destinationAirports,
@@ -41,6 +42,11 @@ fun FlightSearchApp(
             onClickAddFavorite = {favorite: Favorite ->
                 coroutineScope.launch {
                     viewModel.saveItem(favorite)
+                }
+            },
+            onClickRemoveFavorite = {favorite: Favorite ->
+                coroutineScope.launch {
+                    viewModel.removeItem(favorite)
                 }
             },
         )

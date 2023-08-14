@@ -43,6 +43,8 @@ class FlightSearchViewModel (private val airportDao: AirportDao, private val fav
 
     suspend fun saveItem(favoriteItem: Favorite) = favoriteDao.addFavorite(favoriteItem)
 
+    suspend fun removeItem(favoriteItem: Favorite) = favoriteDao.removeFavorite(favoriteItem)
+
 
 
     fun searchDestinations(
