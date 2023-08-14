@@ -19,7 +19,8 @@ interface AirportDao {
         SELECT * FROM airport 
         WHERE 
             (name LIKE '%' || :searchText || '%'
-            OR iata_code LIKE '%' || :searchText || '%');
+            OR iata_code LIKE '%' || :searchText || '%')
+        ORDER BY passengers DESC;
         """
     )
     fun searchAirport(searchText: String): Flow<List<Airport>>
@@ -28,6 +29,7 @@ interface AirportDao {
         """
         SELECT * FROM airport 
         WHERE airport.id != :destinationId
+        ORDER BY passengers DESC;
         """
     )
     fun searchDestination(destinationId: Int): Flow<List<Airport>>

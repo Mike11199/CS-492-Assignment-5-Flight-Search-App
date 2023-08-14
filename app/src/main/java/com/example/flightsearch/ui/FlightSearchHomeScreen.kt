@@ -96,7 +96,9 @@ fun FlightSearchInputBox(
     updateUIForSearchText: (searchString: String) -> Unit,
     onClickNavigateToScreen: (screenType: ScreenType) -> Unit,
 ) {
-    var text by remember { mutableStateOf("") }
+//    var text by remember { mutableStateOf("") }
+    var uiText = flightSearchUIState.searchString
+
     Row(
         Modifier
             .padding(start = 1.dp, end = 1.dp, top = 75.dp, bottom = 55.dp)
@@ -105,15 +107,15 @@ fun FlightSearchInputBox(
         val focusManager = LocalFocusManager.current
         TextField(
             maxLines = 1,
-            value = text,
+            value = uiText,
             //keyboard actions to hide keyboard when clicking enter
             keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
             keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done,
             keyboardType = KeyboardType.Password),
             onValueChange = {
-                text = it.replace("\n", "")
+                uiText = it.replace("\n", "")
                 updateUIForSearchText(it.replace("\n", ""))
-                if (text == ""){
+                if (uiText == ""){
                     onClickNavigateToScreen(ScreenType.Home)
                 } else{
                     onClickNavigateToScreen(ScreenType.AutoComplete)
@@ -151,7 +153,8 @@ private fun FlightSearchAppContent(
 ){
     FlightSearchTopAppBar(
         flightSearchUIState = flightSearchUIState,
-        onClickNavigateToScreen = onClickNavigateToScreen
+        onClickNavigateToScreen = onClickNavigateToScreen,
+        updateUIForSearchText = updateUIForSearchText,
     )
     FlightSearchInputBox(
         flightSearchUIState = flightSearchUIState,
@@ -176,11 +179,13 @@ private fun FlightSearchAppContent(
     }
     else if (flightSearchUIState.currentScreen == ScreenType.AirportDetail){
         DestinationList(
+            favorites = favorites,
             onClickNavigateToScreen = onClickNavigateToScreen,
             airports = destinationAirports,
             updateUiStateForSelectedAirport = updateUiStateForSelectedAirport,
             flightSearchUIState = flightSearchUIState,
-            onClickAddFavorite = onClickAddFavorite
+            onClickAddFavorite = onClickAddFavorite,
+            onClickRemoveFavorite = onClickRemoveFavorite
             )
     }
 
@@ -216,6 +221,8 @@ fun DestinationList(
     updateUiStateForSelectedAirport: (selectedAirport: Airport) -> Unit,
     flightSearchUIState: FlightSearchUIState,
     onClickAddFavorite: (favorite: Favorite) -> Unit,
+    favorites: List<Favorite>,
+    onClickRemoveFavorite: (favorite: Favorite) -> Unit,
 ){
     LazyColumn(
         Modifier.padding(top = 160.dp),
@@ -225,8 +232,10 @@ fun DestinationList(
         itemsIndexed(airports) { index, airport ->
             DestinationCard(
                 onClickAddFavorite = onClickAddFavorite,
+                onClickRemoveFavorite = onClickRemoveFavorite,
                 airport = airport,
-                flightSearchUIState = flightSearchUIState
+                flightSearchUIState = flightSearchUIState,
+                favorites = favorites
             )
             Spacer(modifier = Modifier.height(15.dp))
         }
@@ -302,6 +311,7 @@ private fun FlightSearchTopAppBar(
     flightSearchUIState: FlightSearchUIState,
     modifier: Modifier = Modifier,
     onClickNavigateToScreen: (screenType: ScreenType) -> Unit,
+    updateUIForSearchText: (searchString: String) -> Unit,
 ) {
 
     val currentPage = flightSearchUIState.currentScreen
@@ -315,6 +325,7 @@ private fun FlightSearchTopAppBar(
         if (currentPage != ScreenType.Home) {
             IconButton(
                 onClick = {
+                    updateUIForSearchText("")
                     onClickNavigateToScreen(ScreenType.Home)
                 },
                 modifier = Modifier.align(Alignment.TopStart)
@@ -359,9 +370,16 @@ fun DestinationCard(
     modifier: Modifier = Modifier,
     flightSearchUIState: FlightSearchUIState,
     onClickAddFavorite: (favorite: Favorite) -> Unit,
+    favorites: List<Favorite>,
+    onClickRemoveFavorite: (favorite: Favorite) -> Unit,
 ) {
 
     val selectedAirport = flightSearchUIState.selectedAirportObject
+    val isAirportFavorited = favorites.find {
+            favorite -> favorite.departure_code == selectedAirport.iata_code &&
+            favorite.destination_code == airport.iata_code
+    }
+
 
     Card(
         onClick = {
@@ -487,31 +505,54 @@ fun DestinationCard(
             Row(
                 modifier = Modifier
             ) {
-
-                Button(
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Transparent,
-                        contentColor = Color.Transparent
-                    ),
-                    onClick = {
+                if (isAirportFavorited != null){
+                    Button(
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent,
+                            contentColor = Color.Transparent
+                        ),
+                        onClick = {
+                            onClickRemoveFavorite(isAirportFavorited)
+                        },
+                    ){
+                        Icon(
+                            imageVector = Icons.Default.Star,
+                            contentDescription = "favorite",
+                            tint = Color(244,214,79, 250),
+                            modifier = Modifier
+                                .fillMaxSize(1f)
+                                .background(
+                                    color = Color.Transparent,
+                                )
+                        )
+                    }
+                }
+                else {
+                    Button(
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent,
+                            contentColor = Color.Transparent
+                        ),
+                        onClick = {
                             onClickAddFavorite(
                                 Favorite(
                                     departure_code = selectedAirport.iata_code,
                                     destination_code = airport.iata_code
                                 )
                             )
-                    },
-                ){
-                    Icon(
-                        imageVector = Icons.Default.Star,
-                        contentDescription = "favorite",
-                        tint = Color(244,214,79, 250),
-                        modifier = Modifier
-                            .fillMaxSize(1f)
-                            .background(
-                                color = Color.Transparent,
-                            )
-                    )
+                        },
+                    ){
+                        Icon(
+                            imageVector = Icons.Default.Star,
+                            contentDescription = "favorite",
+                            tint = Color.DarkGray,
+                            modifier = Modifier
+                                .fillMaxSize(1f)
+                                .background(
+                                    color = Color.Transparent,
+                                )
+                        )
+                    }
                 }
             }
         }
