@@ -340,7 +340,7 @@ fun DestinationCard(
             .padding(start = 20.dp, end = 20.dp),
         shape = RoundedCornerShape(10),
         colors = CardDefaults.cardColors(
-            containerColor = Color(145,153,255, 250),
+            containerColor = Color(5,50,115, 250),
 
         )
     )
@@ -373,7 +373,7 @@ fun DestinationCard(
                                 textAlign = TextAlign.Center,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 14.sp,
-                                color = Color.DarkGray
+                                color = Color.Gray
                             )
                         }
                     }
@@ -392,7 +392,7 @@ fun DestinationCard(
                                 textAlign = TextAlign.Center,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 14.sp,
-                                //                        color = Color.White
+                                color = Color.White
                             )
                         }
                         Row(
@@ -403,7 +403,7 @@ fun DestinationCard(
                                 fontWeight = FontWeight.Normal,
                                 fontSize = 14.sp,
                                 overflow = TextOverflow.Ellipsis,
-                                //                        color = Color.White
+                                color = Color.White
                             )
                         }
                     }
@@ -420,7 +420,7 @@ fun DestinationCard(
                                 textAlign = TextAlign.Center,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 14.sp,
-                                color = Color.DarkGray
+                                color = Color.Gray
                             )
                         }
                     }
@@ -438,7 +438,7 @@ fun DestinationCard(
                                 textAlign = TextAlign.Center,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 14.sp,
-                                //                        color = Color.White
+                                color = Color.White
                             )
                         }
                         Row(
@@ -449,7 +449,7 @@ fun DestinationCard(
                                 fontWeight = FontWeight.Normal,
                                 fontSize = 14.sp,
                                 overflow = TextOverflow.Ellipsis,
-                                //                        color = Color.White
+                                color = Color.White
                             )
                         }
                     }
@@ -461,7 +461,7 @@ fun DestinationCard(
                 Icon(
                     imageVector = Icons.Default.Star,
                     contentDescription = "favorite",
-                    tint = Color.DarkGray,
+                    tint = Color.Gray,
                     modifier = Modifier
                         .fillMaxSize(.9f)
                 )
